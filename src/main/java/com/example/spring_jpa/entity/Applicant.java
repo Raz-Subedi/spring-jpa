@@ -1,9 +1,9 @@
 package com.example.spring_jpa.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Applicant {
@@ -14,6 +14,20 @@ public class Applicant {
     private String email;
     private String phone;
     private String status;
+
+    @OneToOne(mappedBy = "applicant", cascade = CascadeType.ALL)
+    private Resume resume;
+
+    @OneToMany(mappedBy = "applicant",cascade = CascadeType.ALL)
+    private List<Application> applications = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "applicants_jobs",
+            joinColumns = @JoinColumn(name = "applicantId"),
+            inverseJoinColumns = @JoinColumn(name = "jobId")
+    )
+    private List<Job> jobs = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -53,5 +67,29 @@ public class Applicant {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Resume getResume() {
+        return resume;
+    }
+
+    public void setResume(Resume resume) {
+        this.resume = resume;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 }

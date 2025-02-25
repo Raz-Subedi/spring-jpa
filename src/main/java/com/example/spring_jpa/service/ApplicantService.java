@@ -1,6 +1,8 @@
 package com.example.spring_jpa.service;
 
 import com.example.spring_jpa.entity.Applicant;
+import com.example.spring_jpa.entity.Application;
+import com.example.spring_jpa.entity.Resume;
 import com.example.spring_jpa.repository.ApplicantCrudRepository;
 import com.example.spring_jpa.repository.ApplicantJpaRepository;
 import com.example.spring_jpa.repository.ApplicantPagingAndSortingRepository;
@@ -27,6 +29,16 @@ public class ApplicantService {
     }
 
     public Applicant saveApplicant(Applicant applicant) {
+        Resume resume = applicant.getResume();
+        if(resume != null) {
+            resume.setApplicant(applicant);
+        }
+        List<Application> applications = applicant.getApplications();
+        if(applications != null) {
+            for(Application application : applications) {
+                application.setApplicant(applicant);
+            }
+        }
         return applicantCrudRepository.save(applicant);
     }
     public Iterable<Applicant> getApplicantsWithPagination(int page, int size) {
